@@ -26,8 +26,8 @@ public class RequestStageRepositoryTests {
     @Test
     @DisplayName("Salve the Request Stages")
     public void save(){
-        User owner = User.builder().id(3L).build();
-        Request request = Request.builder().id(1L).build();
+        User owner = User.builder().id(7L).build();
+        Request request = Request.builder().id(3L).build();
         RequestStage stage = RequestStage.builder()
                 .id(null)
                 .description("Comprado um novo laptop HP")
@@ -39,13 +39,13 @@ public class RequestStageRepositoryTests {
 
         RequestStage requestStage = requestStageRepository.save(stage);
 
-        assertThat(requestStage.getId()).isEqualTo(1L);
+        assertThat(requestStage.getDescription()).isEqualTo("Comprado um novo laptop HP");
     }
 
     @Test
     @DisplayName("Find Request Stages by Id")
     public void getById(){
-        Optional<RequestStage> byId = requestStageRepository.findById(1L);
+        Optional<RequestStage> byId = requestStageRepository.findById(3L);
         RequestStage stage = byId.get();
 
         assertThat(stage.getDescription()).isEqualTo("Comprado um novo laptop HP");
@@ -56,6 +56,6 @@ public class RequestStageRepositoryTests {
     public void list(){
         List<RequestStage> stages = requestStageRepository.findAll();
 
-        assertThat(stages.size()).isEqualTo(1);
+        assertThat(stages.size()).isGreaterThan(1);
     }
 }
