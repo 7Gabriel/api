@@ -80,4 +80,12 @@ public class UserRepositoryTest {
         assertThat(user).isNotNull();
     }
 
+    @Test
+    @DisplayName("Deleta um usuario")
+    public void delete(){
+        Optional<User> user = repository.findById(1L);
+        repository.delete(user.get());
+        Optional<User> user2 = repository.findById(1L);
+        assertThat(user2).isNull();
+    }
 }

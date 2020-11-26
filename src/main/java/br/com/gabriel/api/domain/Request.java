@@ -2,6 +2,7 @@ package br.com.gabriel.api.domain;
 
 import br.com.gabriel.api.enums.RequestState;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.aspectj.lang.annotation.Before;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,7 +30,7 @@ public class Request implements Serializable {
     @Column(columnDefinition = "text")
     private String description;
 
-    @Column(name= "creation_date",nullable = false)
+    @Column(name= "creation_date",nullable = false, updatable = false)
     private LocalDateTime creationDate;
 
     @Column(length = 12, nullable = false)
