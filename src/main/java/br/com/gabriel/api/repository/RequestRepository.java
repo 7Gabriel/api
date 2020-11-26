@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -14,6 +15,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     public List<Request> findAllByOwnerId(Long id);
 
-    @Query("UPDATE Request SET state = ?2 WHERE id = ?1")
+    @Query("UPDATE requests SET state = ?2 WHERE id = ?1")
+    @Transactional
     public Request updateStatus(Long id, RequestState state);
 }
