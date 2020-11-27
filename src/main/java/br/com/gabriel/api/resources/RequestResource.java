@@ -1,7 +1,9 @@
 package br.com.gabriel.api.resources;
 
 import br.com.gabriel.api.domain.Request;
+import br.com.gabriel.api.domain.RequestStage;
 import br.com.gabriel.api.service.RequestService;
+import br.com.gabriel.api.service.RequestStageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,8 @@ public class RequestResource {
 
     @Autowired
     private RequestService requestService;
+    @Autowired
+    private RequestStageService stageService;
 
     @PostMapping
     public ResponseEntity<Request> save(@RequestBody Request request){
@@ -39,6 +43,11 @@ public class RequestResource {
     @GetMapping
     public ResponseEntity<List<Request>> listAll(){
         return ResponseEntity.ok(requestService.listAll());
+    }
+
+    @GetMapping("/{id}/request-stages")
+    public ResponseEntity<List<RequestStage>> listAllStagesById(@PathVariable("id") Long id){
+        return ResponseEntity.ok(stageService.listAllByRequestId(id));
     }
 
 
