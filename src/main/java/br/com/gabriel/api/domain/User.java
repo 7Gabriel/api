@@ -1,10 +1,9 @@
 package br.com.gabriel.api.domain;
 
 import br.com.gabriel.api.enums.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -28,6 +27,8 @@ public class User implements Serializable {
     @Column(length = 75, nullable = false, unique = true)
     private String email;
 
+    @Getter(onMethod = @__({@JsonIgnore}))
+    @Setter(onMethod = @__({@JsonProperty}))
     @Column(length = 100, nullable = false)
     private String password;
 
@@ -35,9 +36,11 @@ public class User implements Serializable {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Getter(onMethod = @__({@JsonIgnore}))
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Request> requests = new ArrayList<>();
 
+    @Getter(onMethod = @__({@JsonIgnore}))
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<RequestStage> requestsStage = new ArrayList<>();
 }

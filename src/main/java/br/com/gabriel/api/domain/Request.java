@@ -1,10 +1,8 @@
 package br.com.gabriel.api.domain;
 
 import br.com.gabriel.api.enums.RequestState;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.aspectj.lang.annotation.Before;
 
 import javax.persistence.*;
@@ -41,6 +39,7 @@ public class Request implements Serializable {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
+    @Getter(onMethod = @__({@JsonIgnore}))
     @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
     private List<RequestStage> stages = new ArrayList<>();
 }
