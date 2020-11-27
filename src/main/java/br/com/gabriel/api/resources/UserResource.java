@@ -3,6 +3,7 @@ package br.com.gabriel.api.resources;
 import br.com.gabriel.api.domain.Request;
 import br.com.gabriel.api.domain.User;
 import br.com.gabriel.api.dto.UserLoginDTO;
+import br.com.gabriel.api.exeception.NotFoundException;
 import br.com.gabriel.api.service.RequestService;
 import br.com.gabriel.api.service.UserService;
 import lombok.extern.java.Log;
@@ -49,7 +50,7 @@ public class UserResource {
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody UserLoginDTO loginDTO){
-        User loggedUser = userService.login(loginDTO.getEmail(), loginDTO.getPassword());
+        User loggedUser = userService.login(loginDTO.getEmail(), loginDTO.getPassword());;
         return ResponseEntity.ok(loggedUser);
     }
 

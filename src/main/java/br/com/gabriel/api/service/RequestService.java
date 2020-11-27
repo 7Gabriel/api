@@ -2,6 +2,7 @@ package br.com.gabriel.api.service;
 
 import br.com.gabriel.api.domain.Request;
 import br.com.gabriel.api.enums.RequestState;
+import br.com.gabriel.api.exeception.NotFoundException;
 import br.com.gabriel.api.repository.RequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,13 +23,13 @@ public class RequestService {
         return requestRepository.save(request);
     }
 
-    public Request updadeRequest(Request request){
+    public Request updateRequest(Request request){
         return requestRepository.save(request);
     }
 
     public Request getById(Long id){
         Optional<Request> request = requestRepository.findById(id);
-        return request.get();
+        return request.orElseThrow(() -> new NotFoundException("There are not request with id " + id));
     }
 
     public List<Request> listAll(){

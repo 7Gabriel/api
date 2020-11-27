@@ -3,6 +3,7 @@ package br.com.gabriel.api.service;
 import br.com.gabriel.api.domain.Request;
 import br.com.gabriel.api.domain.RequestStage;
 import br.com.gabriel.api.enums.RequestState;
+import br.com.gabriel.api.exeception.NotFoundException;
 import br.com.gabriel.api.repository.RequestRepository;
 import br.com.gabriel.api.repository.RequestStageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class RequestStageService {
 
     public RequestStage getById(Long id){
         Optional<RequestStage> stage = stageRepository.findById(id);
-        return stage.get();
+        return stage.orElseThrow(() -> new NotFoundException("There are not stage with id " + id));
     }
 
     public List<RequestStage> listAllByRequestId(Long requestId){
