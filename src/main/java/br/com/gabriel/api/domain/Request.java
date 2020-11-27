@@ -43,7 +43,4 @@ public class Request implements Serializable {
 
     @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
     private List<RequestStage> stages = new ArrayList<>();
-
-
-
 }
