@@ -1,6 +1,6 @@
 package br.com.gabriel.api.resources.exception;
 
-import br.com.gabriel.api.exeception.NotFoundException;
+import br.com.gabriel.api.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

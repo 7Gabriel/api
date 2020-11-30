@@ -1,11 +1,15 @@
 package br.com.gabriel.api.service;
 
 import br.com.gabriel.api.domain.User;
-import br.com.gabriel.api.exeception.NotFoundException;
+import br.com.gabriel.api.exception.NotFoundException;
+import br.com.gabriel.api.model.PageModel;
+import br.com.gabriel.api.model.PageRequestModel;
 import br.com.gabriel.api.repository.UserRepository;
 import br.com.gabriel.api.util.HashUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,5 +47,13 @@ public class UserService {
 
         Optional<User> login = userRepository.login(email, password);
         return login.orElseThrow(() -> new NotFoundException("Login or Password Invalid"));
+    }
+
+    public PageModel<User> listAllOnLazyMode(PageRequestModel pr){
+        Pageable pageable = PageRequest.of(pr.getPage(), pr.getSize());
+        Page<User> page = userRepository.findAll(pageable);
+        PageModel<User> pm = new PageModel<>((int)page.getTotalElements(), page.getSize(), page.getTotalPages(), page.getContent());
+
+        return pm;
     }
 }

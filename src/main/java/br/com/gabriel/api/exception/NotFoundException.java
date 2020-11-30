@@ -1,4 +1,4 @@
-package br.com.gabriel.api.exeception;
+package br.com.gabriel.api.exception;
 
 public class NotFoundException extends RuntimeException{
 

@@ -3,7 +3,8 @@ package br.com.gabriel.api.resources;
 import br.com.gabriel.api.domain.Request;
 import br.com.gabriel.api.domain.User;
 import br.com.gabriel.api.dto.UserLoginDTO;
-import br.com.gabriel.api.exeception.NotFoundException;
+import br.com.gabriel.api.model.PageModel;
+import br.com.gabriel.api.model.PageRequestModel;
 import br.com.gabriel.api.service.RequestService;
 import br.com.gabriel.api.service.UserService;
 import lombok.extern.java.Log;
@@ -44,19 +45,23 @@ public class UserResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> listAll(){
-        return ResponseEntity.ok(userService.listAll());
+    public ResponseEntity<PageModel<User>> listAll(@RequestParam("page") int page, @RequestParam("size") int size){
+        PageRequestModel pr = new PageRequestModel(page, size);
+        PageModel<User> pm = userService.listAllOnLazyMode(pr);
+        return ResponseEntity.ok(pm);
     }
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody UserLoginDTO loginDTO){
-        User loggedUser = userService.login(loginDTO.getEmail(), loginDTO.getPassword());;
+        User loggedUser = userService.login(loginDTO.getEmail(), loginDTO.getPassword());
         return ResponseEntity.ok(loggedUser);
     }
 
     @GetMapping("/{id}/requests")
-    public ResponseEntity<List<Request>> listAllRequestById(@PathVariable("id") Long id){
-        List<Request> requests = requestService.findAllByOwnerId(id);
+    public ResponseEntity<PageModel<Request>> listAllRequestById(@PathVariable("id") Long id,
+        @RequestParam("page") int page, @RequestParam("size") int size){
+        PageRequestModel pr = new PageRequestModel(page, size);
+        PageModel<Request> requests = requestService.findAllByOwnerIdOnLazyModel(id, pr);
         return ResponseEntity.ok(requests);
     }
 }
