@@ -1,6 +1,7 @@
 package br.com.gabriel.api.service;
 
 import br.com.gabriel.api.domain.User;
+import br.com.gabriel.api.dto.UserUpdateRoleDTO;
 import br.com.gabriel.api.exception.NotFoundException;
 import br.com.gabriel.api.model.PageModel;
 import br.com.gabriel.api.model.PageRequestModel;
@@ -10,7 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -56,4 +61,9 @@ public class UserService {
 
         return pm;
     }
+
+    public int updateRole(User user){
+        return userRepository.updateRole(user.getId(), user.getRole());
+    }
+
 }

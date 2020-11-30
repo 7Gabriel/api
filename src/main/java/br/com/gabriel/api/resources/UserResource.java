@@ -3,6 +3,7 @@ package br.com.gabriel.api.resources;
 import br.com.gabriel.api.domain.Request;
 import br.com.gabriel.api.domain.User;
 import br.com.gabriel.api.dto.UserLoginDTO;
+import br.com.gabriel.api.dto.UserUpdateRoleDTO;
 import br.com.gabriel.api.model.PageModel;
 import br.com.gabriel.api.model.PageRequestModel;
 import br.com.gabriel.api.service.RequestService;
@@ -64,5 +65,16 @@ public class UserResource {
         PageRequestModel pr = new PageRequestModel(page, size);
         PageModel<Request> requests = requestService.findAllByOwnerIdOnLazyModel(id, pr);
         return ResponseEntity.ok(requests);
+    }
+
+    @PatchMapping("/role/{id}")
+    public ResponseEntity<?> updateRole(@PathVariable("id") Long id, @RequestBody UserUpdateRoleDTO userDTO){
+
+        User user = new User();
+        user.setId(id);
+        user.setRole(userDTO.getRole());
+
+        userService.updateRole(user);
+        return ResponseEntity.ok().build();
     }
 }

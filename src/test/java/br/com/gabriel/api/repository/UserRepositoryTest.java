@@ -88,4 +88,12 @@ public class UserRepositoryTest {
         Optional<User> user2 = repository.findById(1L);
         assertThat(user2).isNull();
     }
+
+    @Test
+    @DisplayName("Update Role of one user")
+    public void updateRole3(){
+        int affectedRows = repository.updateRole(7L, Role.SIMPLE);
+        assertThat(affectedRows).isEqualTo(1);
+    }
+
 }
