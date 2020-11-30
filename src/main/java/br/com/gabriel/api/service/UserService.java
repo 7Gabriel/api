@@ -51,7 +51,7 @@ public class UserService {
         password = HashUtil.getSecureHash(password);
 
         Optional<User> login = userRepository.login(email, password);
-        return login.orElseThrow(() -> new NotFoundException("Login or Password Invalid"));
+        return login.orElseThrow(() -> new NotFoundException("Email or Password Invalid"));
     }
 
     public PageModel<User> listAllOnLazyMode(PageRequestModel pr){
