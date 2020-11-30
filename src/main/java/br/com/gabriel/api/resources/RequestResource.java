@@ -2,6 +2,8 @@ package br.com.gabriel.api.resources;
 
 import br.com.gabriel.api.domain.Request;
 import br.com.gabriel.api.domain.RequestStage;
+import br.com.gabriel.api.model.PageModel;
+import br.com.gabriel.api.model.PageRequestModel;
 import br.com.gabriel.api.service.RequestService;
 import br.com.gabriel.api.service.RequestStageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +48,11 @@ public class RequestResource {
     }
 
     @GetMapping("/{id}/request-stages")
-    public ResponseEntity<List<RequestStage>> listAllStagesById(@PathVariable("id") Long id){
-        return ResponseEntity.ok(stageService.listAllByRequestId(id));
+    public ResponseEntity<PageModel<RequestStage>> listAllStagesById(@PathVariable("id") Long id,
+        @RequestParam("page") int page, @RequestParam("size") int size){
+        PageRequestModel pm = new PageRequestModel(page, size);
+        PageModel<RequestStage> pr = stageService.findAllByRequestIdOnLazyModel(id, pm);
+        return ResponseEntity.ok(pr);
     }
 
 
