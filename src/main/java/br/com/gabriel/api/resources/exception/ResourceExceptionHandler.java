@@ -11,9 +11,11 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @ControllerAdvice
-public class ResourcesExceptionHandler extends ResponseEntityExceptionHandler {
+public class ResourceExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ApiError> handleNotFoundException(NotFoundException ex){
@@ -28,12 +30,11 @@ public class ResourcesExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        String defaultMessage =  ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        ApiError error = ApiError.builder()
-                .code(HttpStatus.BAD_REQUEST.value())
-                .msg(defaultMessage)
-                .date(LocalDateTime.now())
-                .build();
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        List<String> errors = new ArrayList<>();
+        ex.getBindingResult().getAllErrors().forEach(error -> {
+            errors.add(error.getDefaultMessage());
+        });
+        ApiErrorList error = new ApiErrorList(HttpStatus.BAD_REQUEST.value(), "Invalid Fields", LocalDateTime.now(), errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 }
