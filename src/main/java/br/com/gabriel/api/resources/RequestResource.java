@@ -2,16 +2,20 @@ package br.com.gabriel.api.resources;
 
 import br.com.gabriel.api.domain.Request;
 import br.com.gabriel.api.domain.RequestStage;
+import br.com.gabriel.api.dto.RequestSaveDTO;
+import br.com.gabriel.api.dto.RequestUpdateDTO;
 import br.com.gabriel.api.model.PageModel;
 import br.com.gabriel.api.model.PageRequestModel;
 import br.com.gabriel.api.service.RequestService;
 import br.com.gabriel.api.service.RequestStageService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.stylesheets.LinkStyle;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,15 +26,19 @@ public class RequestResource {
     private RequestService requestService;
     @Autowired
     private RequestStageService stageService;
+    @Autowired
+    private ModelMapper mapper;
 
     @PostMapping
-    public ResponseEntity<Request> save(@RequestBody Request request){
+    public ResponseEntity<Request> save(@RequestBody @Valid RequestSaveDTO requestDTO){
+        Request request = mapper.map(requestDTO, Request.class);
         Request createdRequest = requestService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdRequest);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Request> update(@PathVariable("id") Long id, @RequestBody Request request){
+    public ResponseEntity<Request> update(@PathVariable("id") Long id, @RequestBody @Valid RequestUpdateDTO requestDTO){
+        Request request = mapper.map(requestDTO, Request.class);
         request.setId(id);
         Request updated = requestService.save(request);
         return ResponseEntity.ok(updated);
