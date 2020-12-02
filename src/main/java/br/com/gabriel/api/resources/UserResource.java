@@ -15,6 +15,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,6 +34,8 @@ public class UserResource {
     private RequestService requestService;
     @Autowired
     private ModelMapper mapper;
+    @Autowired
+    private AuthenticationManager auth;
 
     @PostMapping
     public ResponseEntity<User> save(@RequestBody @Valid UserSaveDTO userDTO){
@@ -62,8 +68,10 @@ public class UserResource {
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody @Valid UserLoginDTO loginDTO){
-        User loggedUser = userService.login(loginDTO.getEmail(), loginDTO.getPassword());
-        return ResponseEntity.ok(loggedUser);
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword());
+        Authentication authenticate = auth.authenticate(token);
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+        return ResponseEntity.ok(null);
     }
 
     @GetMapping("/{id}/requests")
