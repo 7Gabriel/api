@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class ApiApplication extends SpringBootServletInitializer {
 
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder){
+/*	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder){
 		return builder.sources(ApiApplication.class);
-	}
+	}*/
 
 	public static void main(String[] args) {
 		SpringApplication.run(ApiApplication.class, args);
