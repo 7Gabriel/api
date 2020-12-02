@@ -8,6 +8,7 @@ import br.com.gabriel.api.dto.UserUpdateDTO;
 import br.com.gabriel.api.dto.UserUpdateRoleDTO;
 import br.com.gabriel.api.model.PageModel;
 import br.com.gabriel.api.model.PageRequestModel;
+import br.com.gabriel.api.security.JwtManager;
 import br.com.gabriel.api.service.RequestService;
 import br.com.gabriel.api.service.UserService;
 import lombok.extern.java.Log;
@@ -22,6 +23,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Log
 @RestController
@@ -36,6 +39,8 @@ public class UserResource {
     private ModelMapper mapper;
     @Autowired
     private AuthenticationManager auth;
+    @Autowired
+    private JwtManager jwtManager;
 
     @PostMapping
     public ResponseEntity<User> save(@RequestBody @Valid UserSaveDTO userDTO){
@@ -67,11 +72,20 @@ public class UserResource {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody @Valid UserLoginDTO loginDTO){
+    public ResponseEntity<String> login(@RequestBody @Valid UserLoginDTO loginDTO){
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword());
         Authentication authenticate = auth.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authenticate);
-        return ResponseEntity.ok(null);
+        org.springframework.security.core.userdetails.User userDetails  =
+                (org.springframework.security.core.userdetails.User) authenticate.getPrincipal();
+        String email = userDetails.getUsername();
+        List<String> roles = userDetails.getAuthorities()
+                .stream()
+                .map(authoriy -> authoriy.getAuthority())
+                .collect(Collectors.toList());
+        String jwt = jwtManager.createToken(email, roles);
+
+        return ResponseEntity.ok(jwt);
     }
 
     @GetMapping("/{id}/requests")
