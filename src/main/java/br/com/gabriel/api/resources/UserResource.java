@@ -9,6 +9,7 @@ import br.com.gabriel.api.dto.UserUpdateRoleDTO;
 import br.com.gabriel.api.model.PageModel;
 import br.com.gabriel.api.model.PageRequestModel;
 import br.com.gabriel.api.security.JwtManager;
+import br.com.gabriel.api.security.LoginResponse;
 import br.com.gabriel.api.service.RequestService;
 import br.com.gabriel.api.service.UserService;
 import lombok.extern.java.Log;
@@ -72,7 +73,7 @@ public class UserResource {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid UserLoginDTO loginDTO){
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid UserLoginDTO loginDTO){
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword());
         Authentication authenticate = auth.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authenticate);
@@ -83,9 +84,8 @@ public class UserResource {
                 .stream()
                 .map(authoriy -> authoriy.getAuthority())
                 .collect(Collectors.toList());
-        String jwt = jwtManager.createToken(email, roles);
 
-        return ResponseEntity.ok(jwt);
+        return ResponseEntity.ok(jwtManager.createToken(email, roles));
     }
 
     @GetMapping("/{id}/requests")

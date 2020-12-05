@@ -4,6 +4,7 @@ import br.com.gabriel.api.exception.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,11 +21,22 @@ public class ResourceExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ApiError> handleNotFoundException(NotFoundException ex){
         ApiError error = ApiError.builder()
-            .code(HttpStatus.NOT_FOUND.value())
-            .msg(ex.getMessage())
-            .date(LocalDateTime.now()).build();
+                .code(HttpStatus.NOT_FOUND.value())
+                .msg(ex.getMessage())
+                .date(LocalDateTime.now()).build();
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiError> handleBadCredentialsException(BadCredentialsException ex){
+        ApiError error = ApiError.builder()
+                .code(HttpStatus.UNAUTHORIZED.value())
+                .msg(ex.getMessage())
+                .date(LocalDateTime.now()).build();
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
 
     }
 
