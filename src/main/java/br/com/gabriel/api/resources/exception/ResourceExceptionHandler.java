@@ -1,6 +1,7 @@
 package br.com.gabriel.api.resources.exception;
 
 import br.com.gabriel.api.exception.NotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,17 @@ public class ResourceExceptionHandler extends ResponseEntityExceptionHandler {
                 .date(LocalDateTime.now()).build();
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiError> handleDataIntegrityViolationException(DataIntegrityViolationException ex){
+        ApiError error = ApiError.builder()
+                .code(HttpStatus.BAD_REQUEST.value())
+                .msg(ex.getMessage())
+                .date(LocalDateTime.now()).build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 
     }
 
