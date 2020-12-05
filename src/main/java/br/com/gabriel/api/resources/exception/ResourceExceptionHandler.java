@@ -4,6 +4,7 @@ import br.com.gabriel.api.exception.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -37,6 +38,17 @@ public class ResourceExceptionHandler extends ResponseEntityExceptionHandler {
                 .date(LocalDateTime.now()).build();
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiError> handleAccessDeniedException(AccessDeniedException ex){
+        ApiError error = ApiError.builder()
+                .code(HttpStatus.FORBIDDEN.value())
+                .msg(ex.getMessage())
+                .date(LocalDateTime.now()).build();
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
 
     }
 
