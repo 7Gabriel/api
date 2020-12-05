@@ -2,6 +2,7 @@ package br.com.gabriel.api.security;
 
 import br.com.gabriel.api.constants.SecurityConstants;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.catalina.LifecycleState;
@@ -31,7 +32,7 @@ public class JwtManager {
                 .tokenProvider(SecurityConstants.JWT_PROVIDER).build();
     }
 
-    public Claims parseToken(String token){
+    public Claims parseToken(String token) throws JwtException {
         Claims claims = Jwts.parser()
                 .setSigningKey(SecurityConstants.API_KEY.getBytes())
                 .parseClaimsJws(token)
