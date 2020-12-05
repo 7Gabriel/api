@@ -6,12 +6,14 @@ import br.com.gabriel.api.dto.RequestSaveDTO;
 import br.com.gabriel.api.dto.RequestUpdateDTO;
 import br.com.gabriel.api.model.PageModel;
 import br.com.gabriel.api.model.PageRequestModel;
+import br.com.gabriel.api.security.AccessManager;
 import br.com.gabriel.api.service.RequestService;
 import br.com.gabriel.api.service.RequestStageService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.stylesheets.LinkStyle;
 
@@ -36,6 +38,7 @@ public class RequestResource {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdRequest);
     }
 
+    @PreAuthorize("@accessManager.isRequestOwner(#id)")
     @PutMapping("{id}")
     public ResponseEntity<Request> update(@PathVariable("id") Long id, @RequestBody @Valid RequestUpdateDTO requestDTO){
         Request request = mapper.map(requestDTO, Request.class);

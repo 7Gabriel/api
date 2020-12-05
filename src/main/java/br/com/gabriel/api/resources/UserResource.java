@@ -8,6 +8,7 @@ import br.com.gabriel.api.dto.UserUpdateDTO;
 import br.com.gabriel.api.dto.UserUpdateRoleDTO;
 import br.com.gabriel.api.model.PageModel;
 import br.com.gabriel.api.model.PageRequestModel;
+import br.com.gabriel.api.security.AccessManager;
 import br.com.gabriel.api.security.JwtManager;
 import br.com.gabriel.api.security.LoginResponse;
 import br.com.gabriel.api.service.RequestService;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -52,6 +54,7 @@ public class UserResource {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
+    @PreAuthorize("@accessManager.isOwner(#id)")
     @PutMapping("{id}")
     public ResponseEntity<User> update(@PathVariable("id") Long id, @RequestBody @Valid UserUpdateDTO user){
         User userUpdate = mapper.map(user, User.class);
