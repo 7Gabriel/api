@@ -34,12 +34,11 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         var token = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if(token == null || !token.startsWith(SecurityConstants.JWT_PROVIDER)){
-            errorResponse(response, SecurityConstants.JWT_INVALID_MSG);
+            errorResponse(request, response, SecurityConstants.JWT_INVALID_MSG, filterChain);
         }
 
-        token = token.replace(SecurityConstants.JWT_PROVIDER, "");
-
         try {
+            token = token.replace(SecurityConstants.JWT_PROVIDER, "");
             Claims claims = new JwtManager().parseToken(token);
             String email = claims.getSubject();
             List<String> roles = (List<String>) claims.get(SecurityConstants.JWT_ROLE_KEY);
@@ -52,14 +51,14 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
         }catch (Exception e){
-            errorResponse(response, e.getMessage());
+            errorResponse(request, response, e.getMessage(), filterChain);
         }
 
         filterChain.doFilter(request, response);
 
     }
 
-    private void errorResponse(HttpServletResponse response, String errorMessage) throws IOException {
+    private void errorResponse(HttpServletRequest request, HttpServletResponse response, String errorMessage, FilterChain chain) throws IOException, ServletException {
         ApiError error = getApiError(errorMessage);
         PrintWriter writer = response.getWriter();
 
